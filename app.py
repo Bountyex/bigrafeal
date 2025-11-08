@@ -3,7 +3,7 @@ import numpy as np
 import random, math, heapq, time
 import streamlit as st
 
-st.title("🎯 Lottery Low-Payout Combination Finder")
+st.title("🎯 7 number Lowest Result")
 
 uploaded_file = st.file_uploader("Upload Excel File (.xlsx)", type=["xlsx"])
 if uploaded_file is None:
