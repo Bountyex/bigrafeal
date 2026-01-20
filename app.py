@@ -22,7 +22,7 @@ if uploaded_file is None:
 df = pd.read_excel(uploaded_file)
 
 # =========================================================
-# CLEAN & VALIDATE COLUMN NAME
+# CLEAN & VALIDATE COLUMN NAMES
 # =========================================================
 df.columns = (
     df.columns
@@ -31,8 +31,13 @@ df.columns = (
     .str.strip()
 )
 
-if "Selected Numbers" not in df.columns:
-    st.error("❌ Column 'Selected Numbers' not found.")
+# =========================================================
+# USE THE CORRECT COLUMN
+# =========================================================
+numbers_col = "Selected Number"
+
+if numbers_col not in df.columns:
+    st.error(f"❌ Column '{numbers_col}' not found.")
     st.write("📌 Found columns:", df.columns.tolist())
     st.stop()
 
@@ -50,7 +55,7 @@ def parse_ticket(x):
     except:
         return None
 
-tickets = df["Selected Numbers"].dropna().apply(parse_ticket).dropna().tolist()
+tickets = df[numbers_col].dropna().apply(parse_ticket).dropna().tolist()
 n_tickets = len(tickets)
 
 if n_tickets == 0:
@@ -134,7 +139,6 @@ candidates = list(dict.fromkeys(candidates))
 st.info("⏳ Running optimization… please wait")
 
 top_candidates = []
-start = time.time()
 
 for c in candidates:
     best_c, score = hillclimb_sa(c)
@@ -176,5 +180,4 @@ unique, counts = np.unique(best_counts, return_counts=True)
 breakdown = {int(k): int(v) for k, v in zip(unique, counts)}
 
 st.write(breakdown)
-
 st.success(f"🏆 Best Combination: {best_combo} → ₹{best_score:,}")
